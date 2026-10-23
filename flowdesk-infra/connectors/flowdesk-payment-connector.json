@@ -1,0 +1,28 @@
+{
+  "name": "flowdesk-payment-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "plugin.name": "pgoutput",
+    "database.hostname": "host.docker.internal",
+    "database.port": "5432",
+    "database.user": "debezium_user",
+    "database.password": "dbz_root_pass",
+    "database.dbname": "flowdesk",
+    "topic.prefix": "flowdesk-cdc",
+    "slot.name": "flowdesk_payment_slot",
+    "publication.autocreate.mode": "disabled",
+    "publication.name": "flowdesk_publication",
+    "schema.include.list": "payments",
+    "table.include.list": "payments.payment",
+    "decimal.handling.mode": "string",
+    "tombstones.on.delete": "false",
+    "snapshot.mode": "never",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+    "transforms": "removeFields",
+    "transforms.removeFields.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+    "transforms.removeFields.exclude": "source,transaction,ts_us,ts_ns"
+  }
+}

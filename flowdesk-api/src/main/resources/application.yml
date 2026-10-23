@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: flowdesk-api
+  config:
+    import: optional:classpath:application-local.yml
+  elasticsearch:
+    uris: http://localhost:9200
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: flowdesk-api
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  datasource:
+    # Database flowdesk, schema payments (see flowdesk-infra/scripts/provision-flowdesk-db.sh)
+    url: jdbc:postgresql://localhost:5432/flowdesk?currentSchema=payments
+    username: debezium_user
+    password: dbz_root_pass
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.flowdesk.api: INFO
+
+springdoc:
+  swagger-ui:
+    path: /docs/api
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+# UI-triggered demo writes (POST /api/v1/demo/payments/burst). Disable in production.
+flowdesk:
+  database:
+    name: flowdesk
+    schema: payments
+  elasticsearch:
+    backfill-when-empty: true
+    backfill-limit: 500
+    bulk-batch-size: 200
+  demo:
+    payments:
+      enabled: true
+      max-burst-seconds: 60
+      min-interval-ms: 0

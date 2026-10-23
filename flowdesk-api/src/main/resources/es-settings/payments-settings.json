@@ -1,0 +1,22 @@
+{
+  "analysis": {
+    "tokenizer": {
+      "edge_ngram_tokenizer": {
+        "type": "edge_ngram",
+        "min_gram": 2,
+        "max_gram": 30,
+        "token_chars": ["letter", "digit", "punctuation"]
+      }
+    },
+    "analyzer": {
+      "edge_ngram_analyzer": {
+        "tokenizer": "edge_ngram_tokenizer",
+        "filter": ["lowercase", "asciifolding"]
+      },
+      "search_analyzer": {
+        "tokenizer": "standard",
+        "filter": ["lowercase", "asciifolding"]
+      }
+    }
+  }
+}

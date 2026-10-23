@@ -1,0 +1,36 @@
+{
+  "name": "flowdesk",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Flowdesk monorepo — infra, API, and UI",
+  "scripts": {
+    "docker:up": "docker compose -f flowdesk-infra/docker-compose.yml up -d",
+    "docker:down": "docker compose -f flowdesk-infra/docker-compose.yml down",
+    "docker:logs": "docker compose -f flowdesk-infra/docker-compose.yml logs -f",
+    "docker:ps": "docker compose -f flowdesk-infra/docker-compose.yml ps",
+    "backend": "./flowdesk-api/mvnw -f flowdesk-api/pom.xml spring-boot:run",
+    "backend:build": "./flowdesk-api/mvnw -f flowdesk-api/pom.xml -DskipTests package",
+    "ui": "npm run dev --prefix flowdesk-ui",
+    "ui:build": "npm run build --prefix flowdesk-ui",
+    "ui:install": "npm install --prefix flowdesk-ui",
+    "install:all": "npm install && npm run ui:install",
+    "up:docker": "npm run docker:up",
+    "up:backend": "npm run backend",
+    "up:ui": "npm run ui",
+    "up:apps": "concurrently -k -n api,ui -c green,magenta \"npm run backend\" \"npm run ui\"",
+    "up": "npm run docker:up && npm run up:apps",
+    "dev": "npm run up:apps",
+    "dev:all": "npm run up",
+    "db:provision": "sh flowdesk-infra/scripts/provision-flowdesk-db.sh",
+    "data:flush": "sh flowdesk-infra/scripts/flush-payment-data.sh",
+    "connector:create": "sh flowdesk-infra/scripts/manage_connector.sh create",
+    "connector:status": "sh flowdesk-infra/scripts/manage_connector.sh status",
+    "connector:delete": "sh flowdesk-infra/scripts/manage_connector.sh delete"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
